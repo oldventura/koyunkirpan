@@ -7,3 +7,30 @@ $ git clone https://github.com/oldventura/koyunkirpan.git
 $ cd koyunkirpan
 $ pip -r requirements.txt
 ```
+
+* After that configure the file ```main.py``` and enter your own credentials inside ```<placeholders>```
+* Edit your crontab and add this file if you want your bot to make comments automatically every * minutes or so.
+
+## Usage
+#### Normal usage:
+```
+python main.py
+```
+* Collects total of 100 posts from hot and new.
+* Selects one random post
+* Collects keywords from this post and top comments
+* Searches for similar posts
+* Collects top 5 comments from similar posts
+* Compares keywords from these comments to find the best fit
+* Comments the best fit on the selected post
+
+#### Comment on specific post:
+```
+python main.py -i <post_id>
+```
+* Finds the submission on reddit by the post id
+* Collects keywords from this post and top comments
+* Searches for similar posts
+* Collects top 5 comments from similar posts
+* Compares keywords from these comments to find the best fit
+* Comments the best fit on the selected post
