@@ -2,6 +2,7 @@
 #-*- encoding:utf-8 -*-
 from __future__ import unicode_literals
 import os
+from pathlib import Path
 import sys
 import time
 import praw
@@ -17,11 +18,8 @@ from requests.exceptions import ConnectionError
 from prawcore.exceptions import ServerError
 
 reddit = praw.Reddit(
-  client_id     = "<client_id>",
-  client_secret = "<client_secret>",
+  "bot",
   user_agent    = 'User-Agent: linux:com.<account_name>.runner:v1.0 (by /u/<account_name>)',
-  username      = "<account_name>",
-  password      = "<account_password>",
 )
 
 ## MAIN CLASS
@@ -32,10 +30,10 @@ class runner:
     self.commented_on       = []
     self.flairs             = []
     self.keywords           = []
-    self.subreddit          = reddit.subreddit("KGBTR")
-    self.working_hours      = ["14", "15", "16", "17", "18", "19", "20", "21", "22", "23"]
+    self.subreddit          = reddit.subreddit('KGBTR')
+    self.working_hours      = ['14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
     self.forbidden_comments = ['[removed]', '[deleted]', '', ' ', None]
-    self.abs_path           = "/home/<system_user>/koyunkirpan/"
+    self.abs_path           = Path(__file__).parent
     self.search_limit       = 20
     self.post_limit         = 50
     self.alike_value        = 1.35
@@ -43,36 +41,36 @@ class runner:
     self.load_commented_on()
 
   def load_commented_on(self):
-    with open(self.abs_path + 'savedata.json',) as f:
+    with self.abs_path.joinpath('savedata.json').open('r', encoding='utf8') as f:
       self.commented_on = json.load(f)
 
   def on_comment(self, post_id):
     if post_id:
       self.commented_on['ids'].append(post_id)
-    with open(self.abs_path + 'savedata.json', 'w') as json_file:
+    with self.abs_path.joinpath('savedata.json').open('w', encoding='utf8') as json_file:
       json.dump(self.commented_on, json_file, indent=4, sort_keys=True)
 
   def load_replies(self):
-    with open(self.abs_path + 'replies.json',) as f:
+    with self.abs_path.joinpath('replies.json').open('r', encoding='utf8') as f:
       self.replies = json.load(f)
     if len(self.replies.keys()) == 0:
       self.load_flairs()
 
   def load_flairs(self):
-    for flair in reddit.subreddit("KGBTR").flair.link_templates:
+    for flair in reddit.subreddit('KGBTR').flair.link_templates:
       if flair['id'] not in self.flairs:
         self.replies[flair['id']] = {'text':flair['text'], 'replies':[]}
-    with open(self.abs_path + 'replies.json', 'w') as json_file:
+    with self.abs_path.joinpath('replies.json').open('w', encoding="utf8") as json_file:
       json.dump(self.replies, json_file, indent=4, sort_keys=True)
 
   def check_posts(self):
     for submission in self.subreddit.new(limit=self.post_limit):
-      if submission not in self.posts and submission.id not in self.commented_on['ids'] and submission.link_flair_text != "Ciddi :snoo_disapproval:":
+      if submission not in self.posts and submission.id not in self.commented_on['ids'] and submission.link_flair_text != 'Ciddi :snoo_disapproval:':
         self.posts.append(submission)
     for submission in self.subreddit.hot(limit=self.post_limit):
-      if submission not in self.posts and submission.id not in self.commented_on['ids'] and submission.link_flair_text != "Ciddi :snoo_disapproval:":
+      if submission not in self.posts and submission.id not in self.commented_on['ids'] and submission.link_flair_text != 'Ciddi :snoo_disapproval:':
         self.posts.append(submission)
-    print("Collected : %s posts\n" %(len(self.posts)))
+    print('Collected : %s posts\n' %(len(self.posts)))
 
   def select_post(self):
     for i in range(0, 5):
@@ -84,27 +82,27 @@ class runner:
     return None
 
   def post_keywords(self, p):
-    for word in p.title.split(" "):
+    for word in p.title.split(' '):
       if word not in self.keywords:
         self.keywords.append(word.lower())
     p.comment_sort = 'best'
     for top_level_comment in p.comments[0:5]:
       if top_level_comment.body not in self.forbidden_comments:
-        for word in top_level_comment.body.splitlines()[0].split(" "):
+        for word in top_level_comment.body.splitlines()[0].split(' '):
           if word not in self.keywords:
             self.keywords.append(word.lower())
     # Limit Keywors
     self.keywords = self.keywords[0:20]
-    # print("KEYWORDS:", self.keywords)
+    # print('KEYWORDS:', self.keywords)
 
   def find_similar(self, title, nsfw):
     try:
       if nsfw:
-        nsfw = "yes"
+        nsfw = 'yes'
       else:
-        nsfw = "no"
-      keywords = title.split(" ")
-      return self.subreddit.search("%s nsfw:%s" %(" OR ".join(keywords), nsfw), limit=self.search_limit)
+        nsfw = 'no'
+      keywords = title.split(' ')
+      return self.subreddit.search('%s nsfw:%s' %(' OR '.join(keywords), nsfw), limit=self.search_limit)
     except ServerError:
       return None
 
@@ -118,18 +116,18 @@ class runner:
         cmt = top_level_comment.body.splitlines()[0].lower()
         if cmt not in self.forbidden_comments and len(cmt) > 0:
           self.comments.append(cmt)
-    print("Collected : %s comments\n" %(len(self.comments)))
+    print('Collected : %s comments\n' %(len(self.comments)))
 
   def compare_sentences(self, s1, s2):
     # Take sentences and split into words
     if type(s1) == list:
       words_1 = s1
     else:
-      words_1 = s1.split(" ")
+      words_1 = s1.split(' ')
     if type(s2) == list:
       words_2 = s2
     else:
-      words_2 = s2.split(" ")
+      words_2 = s2.split(' ')
     # Select the sentence with fewer words as words_1
     if len(words_1) >= len(words_2):
       words_3 = words_1
@@ -196,23 +194,23 @@ class runner:
           row_mins.append(i)
       row_min = row_mins[secrets.randbelow(len(row_mins))]
       cmt = x.comments[row_min]
-      print("Best fit (found):", cmt)
+      print('Best fit (found):', cmt)
       return cmt
     else:
       if post.link_flair_text != None:
         if len(x.replies[post.link_flair_template_id]['replies']) > 0:
           cmt = x.replies[post.link_flair_template_id]['replies'][secrets.randbelow(len(x.replies[post.link_flair_template_id]['replies']))]
-          print("Best fit (not found):", cmt)
+          print('Best fit (not found):', cmt)
           return cmt
         else:
-          print("No fit :(")
+          print('No fit :(')
           return None
 
   def postComment(self, post, cmt):
     if cmt:
       post.reply(cmt)
       self.on_comment(post.id)
-      print("Commented on: %s" %(post.id))
+      print('Commented on: %s' %(post.id))
 
   def doComment(self, post_id):
     self.check_posts()
@@ -221,16 +219,16 @@ class runner:
       post = reddit.submission(id=post_id)
 
     if not post:
-      print ("Couldn't find a suitable post :(")
+      print ('Couldn\'t find a suitable post :(')
       return
 
-    # print("TITLE      : %s" %(post.title))
-    print("POST ID    : %s" %(post.id))
-    print("URL        : https://reddit.com%s\n" %(post.permalink))
+    # print('TITLE      : %s' %(post.title))
+    print('POST ID    : %s' %(post.id))
+    print('URL        : https://reddit.com%s\n' %(post.permalink))
 
     self.post_keywords(post)
 
-    print("Searching similar posts...\n")
+    print('Searching similar posts...\n')
     similars = self.find_similar(post.title, post.over_18)
     if similars:
       self.comment_fit(similars, post.id)
@@ -251,11 +249,11 @@ if __name__ == '__main__':
       post_id = arg[arg.index('--i')+1]
       x.doComment(post_id)
   else:
-    print("Starting script...\n")
-    if time.strftime("%H") in x.working_hours:
+    print('Starting script...\n')
+    if time.strftime('%H') in x.working_hours:
       try:
         x.doComment(None)
       except Exception as e:
-        print("Exception found.", str(e))
+        print('Exception found.', str(e))
     else:
-      print("Sorry, not in working hours.")
+      print('Sorry, not in working hours.')
