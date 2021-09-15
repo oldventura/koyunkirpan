@@ -6,9 +6,10 @@ Source code for the reddit bot account u/koyunkirpan
 $ git clone https://github.com/oldventura/koyunkirpan.git
 $ cd koyunkirpan
 $ pip -r requirements.txt
+$ mv praw.example.ini praw.ini
 ```
 
-* After that configure the file ```main.py``` and enter your own credentials inside ```<placeholders>```
+* After that configure the file `praw.ini` and enter your own credentials inside `<placeholders>`
 * Edit your crontab and add this file if you want your bot to make comments automatically every * minutes or so.
 
 ## Usage
