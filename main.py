@@ -1,21 +1,20 @@
 #!/usr/bin/python3
 #-*- encoding:utf-8 -*-
 from __future__ import unicode_literals
-import os
-from pathlib import Path
 import sys
 import time
 import praw
 import json
-import random
 import secrets
+import warnings
 import numpy as np
-import requests
+from pathlib import Path
+from psaw import PushshiftAPI
+from binary_comb import BinComb
 from praw.models import Message
-from praw.models import Comment
-from shutil import make_archive
-from requests.exceptions import ConnectionError
 from prawcore.exceptions import ServerError
+
+warnings.filterwarnings('ignore')
 
 reddit = praw.Reddit(
   "bot",
@@ -237,11 +236,78 @@ class runner:
 
     self.postComment(post, cmt)
 
+  def reply_on_comment(self, id):
+    # Function to Find Possible Replies To a Comment
+    api = PushshiftAPI(reddit)
+    original_comment = reddit.comment(id)
+
+    all_comments = []
+    comments     = []
+    keywords     = original_comment.body.split()
+    x            = BinComb(keywords)
+    searches     = x.get_combinations()
+
+    print ("Comment:", original_comment.body)
+    print ("Searches:", len(searches))
+
+    #SEARCHING AND COLLECTING COMMENTS
+    for search in searches:
+      print("\nStarting search %s:" %(searches.index(search)+1))
+      comments.append([])
+
+      gen   = api.search_comments(q=search, subreddit='KGBTR')
+      cache = []
+
+      for comment in gen:
+        if len(cache) > 500:
+          break
+        if comment.body == '[deleted]' or comment.body == '[removed]':
+          continue
+        if len(comment.body.split()) >= len(keywords)*3:
+          continue
+        if comment.id == original_comment.id:
+          continue
+        if comment not in all_comments:
+          cache.append(comment)
+
+      comments[searches.index(search)] += cache
+      all_comments += cache
+      if len(cache) > 2:
+        break
+
+    print("\nENDED.")
+
+    for result in comments:
+      print("Length:", len(result))
+      c = None
+      if len(result) > 0:
+        tries = 0
+        while True:
+          if len(result) == 0:
+            break
+          c = result[secrets.randbelow(len(result))]
+          c.refresh()
+          if len(c.replies) >= 1:
+            break
+          else:
+            result.remove(c)
+            c = None
+      if c:
+        break
+
+    if c:
+      print (c.id)
+      print ('https://www.reddit.com'+c.permalink)
+      original_comment.reply(c.replies[secrets.randbelow(len(c.replies))].body)
+    else:
+      print ("No comment found :(")
+
 if __name__ == '__main__':
   x = runner()
   arg = sys.argv[1:]
 
   if len(arg) > 0:
+    # Manually Select a Submission and Comment
     if '-i' in arg:
       post_id = arg[arg.index('-i')+1]
       x.doComment(post_id)
@@ -249,6 +315,7 @@ if __name__ == '__main__':
       post_id = arg[arg.index('--i')+1]
       x.doComment(post_id)
   else:
+    # Select a Random Submission and Comment
     print('Starting script...\n')
     if time.strftime('%H') in x.working_hours:
       try:
@@ -257,3 +324,9 @@ if __name__ == '__main__':
         print('Exception found.', str(e))
     else:
       print('Sorry, not in working hours.')
+
+  # Replying to Comment Replies
+  for item in reddit.inbox.unread(limit=None):
+    if item.type == "comment_reply":
+      x.reply_on_comment(item.id)
+    Message.mark_read(item)
