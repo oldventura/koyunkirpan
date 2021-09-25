@@ -329,4 +329,4 @@ if __name__ == '__main__':
   for item in reddit.inbox.unread(limit=None):
     if item.type == "comment_reply":
       x.reply_on_comment(item.id)
-    Message.mark_read(item)
+    item.mark_read()
