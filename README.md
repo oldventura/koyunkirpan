@@ -27,9 +27,21 @@ python main.py
 
 #### Comment on specific post:
 ```
+python main.py -u <post_url>
+```
+```
+python main.py --url <post_url>
+```
+or
+```
 python main.py -i <post_id>
 ```
+```
+python main.py --id <post_id>
+```
 * Finds the submission on reddit by the post id
+* Finds the submission on reddit by the post url
+* **Submission by url takes precedence over the submission by id.**
 * Collects keywords from this post and top comments
 * Searches for similar posts
 * Collects top 5 comments from similar posts
