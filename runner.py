@@ -295,6 +295,11 @@ class runner:
     if c:
       print (c.id)
       print (f'https://www.reddit.com{c.permalink}')
-      original_comment.reply(c.replies[secrets.randbelow(len(c.replies))].body)
+      print ("REPLIES:", len(c.replies), "\n")
+      to_comment = []
+      for reply in c.replies:
+        if reply.body not in self.forbidden_comments:
+          to_comment.append(reply.body)
+      original_comment.reply(to_comment[secrets.randbelow(len(to_comment))])
     else:
       print ("No comment found :(")
