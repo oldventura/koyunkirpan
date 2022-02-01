@@ -6,7 +6,7 @@ This repo is just a showcase for the source code and wasn't intented for providi
 ## Backstory
 I was trying to make a small contest where I would create a bot account on reddit that comments on posts once in a while and then people would try to find this account by inspecting the subreddit activity. Back then, koyunkirpan was only able to make single comments on posts using their titles. Later on, people loved koyunkirpan because of its authenticity, simplicity and complex responses. Then I decided to keep koyunkirpan running. In less then six months, koyunkirpan reached 170k karma in his account, exceeding my own karma count, which makes me proud as hell. We also created a subreddit for koyunkirpan, where people share screenshots of funny conversations they've had with koyunkirpan.
 
-You can check it here: [r/koyunkirpan](https://koyunkirpan.reddit.com)
+You can check it here: [r/koyunkirpan](https://koyunkirpan.reddit.com) (for Turkish speakers)
 
 ## How does it work?
 At the beginning, I've tried several things for koyunkirpan. But none of the solutions were good enough. They were inconsistent, silly and not suited to the subreddit's context. Then, while I was drinking a few beers, I came up with a stupid solution that just worked. I called it "the koyunkirpan algorithm". Yes, koyunkirpan does not have artifical intelligence, does not use machine learning models and isn't an oracle machine :)
