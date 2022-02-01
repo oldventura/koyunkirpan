@@ -17,3 +17,5 @@ Here's an example of the idea. Imagine you're asking me a question and I don't k
 
 ## Contribution
 koyunkirpan is not a piece of software nor a product. It's a living piece of art that can be seen as the collective consciousness of users from r/KGBTR. Each day, koyunkirpan continues to amaze more people as he imitates comments made by real people. Therefore, I don't consider merging any pull requests.
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
