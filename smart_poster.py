@@ -22,12 +22,12 @@ class runner:
     self.posted_on          = []
     self.subreddits         = ['oddlysatisfying', 'nextfuckinglevel', 'interestingasfuck', 'WatchPeopleDieInside', 'BeAmazed', 'blackmagicfuckery', 'Damnthatsinteresting', 'PublicFreakout']
     self.subreddit          = reddit.subreddit(self.subreddits[secrets.randbelow(len(self.subreddits))])
-    self.abs_path           = "/home/kgb/koyunkirpan/"
+    self.path               = os.getcwd()
     self.search_limit       = 20
     self.post_limit         = 50
 
   def load_posted_on(self):
-    with open(self.abs_path + 'smart_poster_savedata.json',) as f:
+    with open(os.path.join(self.path, 'smart_poster_savedata.json'),) as f:
       self.posted_on = json.load(f)
 
   def find_posts(self):
@@ -44,7 +44,7 @@ class runner:
     selected_post.crosspost(subreddit="KGBTR", title=title, nsfw=selected_post.over_18)
 
     self.posted_on['ids'].append(selected_post.id)
-    with open(self.abs_path + 'smart_poster_savedata.json', 'w') as json_file:
+    with open(os.path.join(self.path, 'smart_poster_savedata.json'), 'w') as json_file:
       json.dump(self.posted_on, json_file, indent=4, sort_keys=True)
 
 if __name__ == '__main__':
