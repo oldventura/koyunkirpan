@@ -16,4 +16,4 @@ Trying to analyze text context was amazingly hard because of the diversity of th
 Here's an example of the idea. Imagine you're asking me a question and I don't know the answer but I'm trying to look like I know the answer. So, I go to a university and wander around searching for people that ask similar questions to my original question. I listen to professors' answers, collect them, and then decide on an answer by ranking them. After that I return and just give you the selected answer.
 
 ## Contribution
-koyunkirpan is not a piece of software nor a product. It's a living piece of art that can be seen as the collective consciousness of users from r/KGBTR. Each day, koyunkirpan continues to amaze more people as he imitates comments made by real people.
+koyunkirpan is not a piece of software nor a product. It's a living piece of art that can be seen as the collective consciousness of users from r/KGBTR. Each day, koyunkirpan continues to amaze more people as he imitates comments made by real people. Therefore, I don't consider merging any pull requests.
