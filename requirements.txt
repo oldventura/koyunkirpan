@@ -1,4 +1,0 @@
-requests
-praw
-psaw
-numpy
